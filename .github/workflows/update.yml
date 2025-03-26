@@ -2,12 +2,13 @@ name: Update Feed
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
-  workflow_dispatch:
+    - cron: '*/15 * * * *'  # Ejecuta cada 15 minutos
+  workflow_dispatch:        # Permite ejecutarlo manualmente
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
@@ -18,16 +19,17 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install feedparser lxml pytz requests
+      run: |
+        pip install feedparser lxml pytz requests
 
     - name: Generate Showcase Feed
-      run: python main.py
+      run: |
+        python main.py
 
-      - name: Commit and push changes
-  run: |
-    git config --global user.name "GitHub Action"
-    git config --global user.email "action@github.com"
-    git add rss-showcase.xml
-    git commit -m "⏱️ Actualización automática del feed"
-    git push
-  continue-on-error: true
+    - name: Commit and push changes
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add rss-showcase.xml
+        git commit -m "⏱️ Actualización automática del feed" || echo "No changes to commit"
+        git push
